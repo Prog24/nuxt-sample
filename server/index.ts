@@ -45,7 +45,7 @@ const validateAssertion = async (assertion: any) => {
 }
 
 app.get('/api/ping', async (request: Request, response: Response) => {
-  const assertion = request.header('X-Goo-IAP-JWT-Assertion')
+  const assertion = request.header('X-Goog-IAP-JWT-Assertion')
   let email: string | undefined = 'None'
   // eslint-disable-next-line no-console
   console.log('>>>', assertion)
