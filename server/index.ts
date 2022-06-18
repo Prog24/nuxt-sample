@@ -56,16 +56,22 @@ const verifyToken = async (
   try {
     const info = await validateAssertion(assertion)
     if (!info.exp) {
+      // eslint-disable-next-line no-console
+      console.log('1')
       response.status(403).json({ message: 'Forbidden' })
     } else if (Date.now() < info.exp * 1000) {
       response.locals.email(info.email)
       next()
     } else {
+      // eslint-disable-next-line no-console
+      console.log('2')
       response.status(403).json({ message: 'Forbidden' })
     }
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(error)
+    // eslint-disable-next-line no-console
+    console.log('3')
     response.status(403).json({ message: 'Forbidden' })
   }
 }
