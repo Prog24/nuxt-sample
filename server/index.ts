@@ -26,6 +26,10 @@ const validateAssertion = async (assertion: any) => {
   const aud = await audience()
 
   const response = await oAuth2Client.getIapPublicKeys()
+  // eslint-disable-next-line no-console
+  console.log('!!!!')
+  // eslint-disable-next-line no-console
+  console.log(response)
   const ticket = await oAuth2Client.verifySignedJwtWithCertsAsync(
     assertion,
     response.pubkeys,
@@ -33,6 +37,7 @@ const validateAssertion = async (assertion: any) => {
     ['https://cloud.google.com/iap']
   )
   const payload = ticket.getPayload()
+  // eslint-disable-next-line no-console
   return {
     email: payload?.email,
     sub: payload?.sub,
@@ -42,7 +47,11 @@ const validateAssertion = async (assertion: any) => {
 app.get('/api/ping', async (request: Request, response: Response) => {
   const assertion = request.header('X-Goo-IAP-JWT-Assertion')
   let email: string | undefined = 'None'
+  // eslint-disable-next-line no-console
+  console.log('>>>', assertion)
   try {
+    // eslint-disable-next-line no-console
+    console.log('jogehoge')
     const info = await validateAssertion(assertion)
     email = info.email
   } catch (error) {
