@@ -1,4 +1,10 @@
-import express, { json, urlencoded, Request, Response } from 'express'
+import express, {
+  json,
+  urlencoded,
+  Request,
+  Response,
+  NextFunction,
+} from 'express'
 import { isAvailable, project } from 'gcp-metadata'
 import { OAuth2Client } from 'google-auth-library'
 
@@ -6,6 +12,7 @@ const app = express()
 app.use(json())
 app.use(urlencoded({ extended: true }))
 
+// https://cloud.google.com/nodejs/getting-started/authenticate-users?hl=ja
 const oAuth2Client = new OAuth2Client()
 
 let aud: any
@@ -26,10 +33,6 @@ const validateAssertion = async (assertion: any) => {
   const aud = await audience()
 
   const response = await oAuth2Client.getIapPublicKeys()
-  // eslint-disable-next-line no-console
-  console.log('!!!!')
-  // eslint-disable-next-line no-console
-  console.log(response)
   const ticket = await oAuth2Client.verifySignedJwtWithCertsAsync(
     assertion,
     response.pubkeys,
@@ -37,28 +40,47 @@ const validateAssertion = async (assertion: any) => {
     ['https://cloud.google.com/iap']
   )
   const payload = ticket.getPayload()
-  // eslint-disable-next-line no-console
   return {
     email: payload?.email,
     sub: payload?.sub,
+    exp: payload?.exp,
   }
 }
 
-app.get('/api/ping', async (request: Request, response: Response) => {
+const verifyToken = async (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
   const assertion = request.header('X-Goog-IAP-JWT-Assertion')
-  let email: string | undefined = 'None'
-  // eslint-disable-next-line no-console
-  console.log('>>>', assertion)
   try {
-    // eslint-disable-next-line no-console
-    console.log('jogehoge')
     const info = await validateAssertion(assertion)
-    email = info.email
+    if (!info.exp) {
+      response.status(403).json({ message: 'Forbidden' })
+    } else if (Date.now() < info.exp * 1000) {
+      response.locals.email(info.email)
+      next()
+    } else {
+      response.status(403).json({ message: 'Forbidden' })
+    }
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(error)
+    response.status(403).json({ message: 'Forbidden' })
   }
-  response.json({ message: email })
+}
+
+app.get('/api/ping', verifyToken, (_request: Request, response: Response) => {
+  // const assertion = request.header('X-Goog-IAP-JWT-Assertion')
+  // let email: string | undefined = 'None'
+  // try {
+  //   const info = await validateAssertion(assertion)
+  //   email = info.email
+  // } catch (error) {
+  //   // eslint-disable-next-line no-console
+  //   console.error(error)
+  // }
+  response.json({ message: response.locals.email })
 })
 
 export default app
