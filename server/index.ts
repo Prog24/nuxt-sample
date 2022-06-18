@@ -21,3 +21,5 @@ app.get('/api/ping', (request: Request, response: Response) => {
   const token = request.headers['x-goog-iap-jwt-assertion']
   response.json({ jwt: token })
 })
+
+export default app
