@@ -60,6 +60,8 @@ const verifyToken = async (
       console.log('1')
       response.status(403).json({ message: 'Forbidden' })
     } else if (Date.now() < info.exp * 1000) {
+      // eslint-disable-next-line no-console
+      console.log(info)
       response.locals.email(info.email)
       next()
     } else {
