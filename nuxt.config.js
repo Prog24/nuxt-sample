@@ -6,6 +6,10 @@ export default {
 
   serverMiddleware: ['~~/server'],
 
+  router: {
+    middleware: 'sample',
+  },
+
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - gcp-sample',

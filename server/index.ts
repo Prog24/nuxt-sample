@@ -78,7 +78,7 @@ const verifyToken = async (
   }
 }
 
-app.get('/api/ping', verifyToken, (_request: Request, response: Response) => {
+app.post('/api/ping', verifyToken, (_request: Request, response: Response) => {
   // const assertion = request.header('X-Goog-IAP-JWT-Assertion')
   // let email: string | undefined = 'None'
   // try {
