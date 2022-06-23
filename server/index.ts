@@ -62,7 +62,7 @@ const verifyToken = async (
     } else if (Date.now() < info.exp * 1000) {
       // eslint-disable-next-line no-console
       console.log(info)
-      response.locals.email(info.email)
+      response.locals.email = info.email
       next()
     } else {
       // eslint-disable-next-line no-console
