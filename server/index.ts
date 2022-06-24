@@ -53,6 +53,11 @@ const verifyToken = async (
   next: NextFunction
 ) => {
   const assertion = request.header('X-Goog-IAP-JWT-Assertion')
+  const userId = request.header('X-Goog-Authenticated-User-Id')
+  // eslint-disable-next-line no-console
+  console.log('>>>>>>>>')
+  // eslint-disable-next-line no-console
+  console.log(userId)
   try {
     const info = await validateAssertion(assertion)
     if (!info.exp) {
