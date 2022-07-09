@@ -115,8 +115,8 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'NuxtTutorial',
-}
+<script lang="ts">
+import { Vue, Component } from 'nuxt-property-decorator'
+@Component
+export default class NuxtTutorial extends Vue {}
 </script>

@@ -14,8 +14,8 @@
   </v-row>
 </template>
 
-<script>
-export default {
-  name: 'InspirePage',
-}
+<script lang="ts">
+import { Vue, Component } from 'nuxt-property-decorator'
+@Component
+export default class InspirePage extends Vue {}
 </script>

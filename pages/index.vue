@@ -80,8 +80,15 @@
   </v-row>
 </template>
 
-<script>
-export default {
-  name: 'IndexPage',
-}
+<script lang="ts">
+import { Vue, Component } from 'nuxt-property-decorator'
+import NuxtLogo from '../components/NuxtLogo.vue'
+import VuetifyLogo from '../components/VuetifyLogo.vue'
+@Component({
+  components: {
+    NuxtLogo,
+    VuetifyLogo,
+  },
+})
+export default class IndexPage extends Vue {}
 </script>
